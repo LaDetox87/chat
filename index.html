@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: lightcyan;
+        }
+        li{
+            padding: 10px;
+            margin: 5px;
+            border-bottom: 1px solid #eee;
+            list-style: none;
+            background-color: #70bdf1;
+            color: #fff;
+        }
+        #input, #form {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: none;
+            border-top: 1px solid #ccc;
+            outline: none;
+        }
+        #envoyer {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            border-radius: 0 0 10px 10px;
+        }
+    </style>
+</head>
+<body>
+    <ul id="messages">
+    </ul>
+    <form id="form">
+        <label>Message :</label><br>
+        <input type="text" id="input"><br>
+        <input type="submit" id="envoyer" value="Envoyer">
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+        
+
+        const socket = io();
+
+        var pseudo = prompt("saisir pseudo");
+        pseudo = pseudo.toUpperCase()=="MATIS" ? "matis le gros bg" : pseudo; 
+        pseudo = pseudo.toUpperCase()=="ENZO" ? "enzo trop fort à fortnite" : pseudo;
+        arabarray = ["YOUNES",""]
+        pseudo = pseudo.toUpperCase()=="YOUNES" ? "arab" : pseudo;
+        beurkarray = ["VICTOR","MOLKY","LUIGI"];
+        pseudo = beurkarray.includes(pseudo.toUpperCase()) ? "beurk" : pseudo;
+
+        pseudo = pseudo.toUpperCase() == "MATHIEU" ? prompt("saisir le mdp") == "squeezie" ? "Mathieu" : "imposteur" : pseudo;
+        pseudo = !pseudo ? "Bryan Boulay" : pseudo;
+        
+        socket.emit('pseudo', pseudo);
+
+        const messages = document.getElementById('messages');
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+
+        socket.on('chat message', (msg) => {
+            if (msg==`<img alt="erreur" src="https://th.bing.com/th/id/OIP.ILW_ev5UzinTqpk43M9cVAHaHK?rs=1&pid=ImgDetMain"></img>`){
+                const item = document.createElement('img');
+                item.src = "https://th.bing.com/th/id/OIP.ILW_ev5UzinTqpk43M9cVAHaHK?rs=1&pid=ImgDetMain";
+                item.alt = "kevin fail";
+                messages.appendChild(item);
+                window.scrollTo(0, document.body.scrollHeight);
+            }else{
+            const item = document.createElement('li');
+            item.textContent =  msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);}
+        });
+
+        form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (input.value) {
+            socket.emit('chat message', input.value);
+            input.value = '';
+        }
+        });
+
+    </script>
+</body>
+</html>
